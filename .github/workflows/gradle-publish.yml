@@ -24,16 +24,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21' # Adjust as needed
 
-      # Cache Gradle dependencies
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       # Configure GitHub Packages repository
       - name: Configure GitHub Packages
