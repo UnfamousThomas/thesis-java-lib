@@ -42,6 +42,11 @@ jobs:
           echo "
           
           publishing {
+              publications {
+                 create<MavenPublication>(\"thesis-java-lib\") {
+                  from(components[\"java\"]) 
+                }
+              }
               repositories {
                   maven {
                       name = \"GitHubPackages\"
