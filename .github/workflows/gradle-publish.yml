@@ -5,13 +5,12 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-  packages: write
-
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
 
     steps:
       # Checkout the repository
@@ -52,8 +51,8 @@ jobs:
                       name = \"GitHubPackages\"
                       url = uri(\"https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository }}\")
                       credentials {
-                          username = \"${{ github.repository_owner }}\"
-                          password = \"${{ secrets.GITHUB_TOKEN }}\"
+                          username = System.getenv("GITHUB_ACTOR")
+                          password = System.getenv("GITHUB_TOKEN")
                       }
                   }
               }
