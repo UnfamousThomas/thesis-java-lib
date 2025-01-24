@@ -39,7 +39,9 @@ jobs:
       # Configure GitHub Packages repository
       - name: Configure GitHub Packages
         run: |
-          echo "publishing {
+          echo "
+          
+          publishing {
               repositories {
                   maven {
                       name = \"GitHubPackages\"
