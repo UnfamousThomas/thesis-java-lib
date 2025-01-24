@@ -1,0 +1,59 @@
+name: Publish Gradle Package
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21' # Adjust as needed
+
+      # Cache Gradle dependencies
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Configure GitHub Packages repository
+      - name: Configure GitHub Packages
+        run: |
+          echo "publishing {
+              repositories {
+                  maven {
+                      name = 'GitHubPackages'
+                      url = uri('https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository }}')
+                      credentials {
+                          username = '${{ github.actor }}'
+                          password = '${{ secrets.GITHUB_TOKEN }}'
+                      }
+                  }
+              }
+          }" >> build.gradle
+
+      # Publish the package
+      - name: Publish Gradle package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publish
